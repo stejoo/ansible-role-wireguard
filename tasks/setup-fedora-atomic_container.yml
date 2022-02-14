@@ -1,0 +1,16 @@
+---
+# Copyright (C) 2022 Stefan Joosten
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: (Fedora IoT/Red Hat Edge) Install WireGuard package(s)
+  community.general.rpm_ostree_pkg:
+    name:
+      - wireguard-tools
+    state: present
+  register: rpm_ostree_pkg
+
+- name: (Fedora IoT/Red Hat Edge) Reboot to have WireGuard tools available
+  reboot:
+  when:
+    - rpm_ostree_pkg is changed
+    - '"already provided" not in rpm_ostree_pkg.stdout'
